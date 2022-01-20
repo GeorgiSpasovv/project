@@ -75,26 +75,8 @@ var app = new Vue({
             socket.emit('getfav');
         },
 
-
-
-        admin(command) {
-            socket.emit('admin', command)
-        },
-        action() {
-            socket.emit('action', 'advance');
-        },
-        join() {
-            socket.emit('join');
-        },
-        chat() {
-            socket.emit('chat', this.chatmessage);
-            this.chatmessage = '';
-        },
-        announce(message) {
-            const messages = document.getElementById('messages');
-            var item = document.createElement('li');
-            item.textContent = message;
-            messages.prepend(item);
+        delFav(token) {
+            socket.emit('delfav', token);
         },
 
         fail(message) {
@@ -168,6 +150,6 @@ function connect() {
 
     socket.on('result', function (data) {
         app.results = data;
-        this.comp = true;
+        app.comp = true;
     });
 }

@@ -2,52 +2,55 @@
 <html lang="en">
 <%- include('header'); -%>
 
-<div id="game">
+    <div id="game">
 
-    <div class="nav-container">
-        <%- include('navbar'); -%>
-    </div>
-    
-    <main>
-        <div class="container">
-    
-            <div >
-                <!-- Error Display -->
-                <div v-if="error" class="alert alert-danger">
-                    <strong>Error: </strong> {{error}}
-                </div>
-    
-                <div v-if="success" class="alert alert-success">
-                    <strong>Success: </strong> {{success}}
-                </div>
-    
-                <!-- Waiting for connection -->
-                <div v-if="page == 1">
-                    <%- include('compare') -%>
-                </div>
-    
-                <!-- Waiting for player to join -->
-                <div v-else-if="page==2">
-                    <%- include('register') -%>
-                </div>
-    
-                <!-- Playing the game -->
-                <div v-else-if="page==3">
-                    <%- include('login') -%>
-                </div>
-    
-                <div v-else-if="page == 4">
-                    <%- include('favourites') -%>
+        <div class="nav-container">
+            <%- include('navbar'); -%>
+        </div>
+
+        <main>
+            <div class="container">
+
+                <div>
+                    <!-- Error Display -->
+                    <div v-if="error" class="alert alert-danger">
+                        <strong>Error: </strong> {{error}}
+                    </div>
+
+                    <div v-if="success" class="alert alert-success">
+                        <strong>Success: </strong> {{success}}
+                    </div>
+
+                    <!-- Waiting for connection -->
+                    <div v-if="page == 1">
+                        <%- include('compare') -%>
+                    </div>
+
+                    <!-- Waiting for player to join -->
+                    <div v-else-if="page==2">
+                        <%- include('register') -%>
+                    </div>
+
+                    <!-- Playing the game -->
+                    <div v-else-if="page==3">
+                        <%- include('login') -%>
+                    </div>
+
+                    <div v-else-if="page == 4">
+                        <%- include('favourites') -%>
+                    </div>
                 </div>
             </div>
+        </main>
+
+        <div v-if="comp" class="comp-container">
+
+            <li v-for="res in results">{{res.dex}} - {{res.price}} {{buy.symbol}}</li>
         </div>
-    </main>
-    
-    <!-- <div v-if="comp" class="comp-container"></div> -->
-    
 
-</div>
 
-<%- include('footer'); -%>
+    </div>
+
+    <%- include('footer'); -%>
 
 </html>

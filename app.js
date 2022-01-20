@@ -1,6 +1,6 @@
 'use strict';
 
-const paraSwapAssetList = require('./core-const/token');
+const currencies = require('./core-const/token');
 const networks = require('./core-const/ExchangeRouterAddress');
 //Set up express
 const express = require('express');
@@ -32,6 +32,7 @@ let loginURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/login';
 let registerURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/register';
 let favURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/addFavouriteCoin';
 let getFavURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/getUserData';
+let delFavURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/removefavouritecoin';
 let compareURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/getCurrencyPrice';
 
 
@@ -82,7 +83,6 @@ function success1(socket, message, halt) {
 async function addFav(socket, str) {
   console.log("Adding to favourites");
   let userName = socketsToPlayers.get(socket);
-
   let user = users.get(userName);
   const Data = { token: user.token, coin: str };
 
@@ -96,17 +96,59 @@ async function addFav(socket, str) {
   return;
 }
 
+async function delFav(socket, str) {
+  console.log("Adding to favourites");
+  let userName = socketsToPlayers.get(socket);
+  let user = users.get(userName);
+  const Data = { token: user.token, coin: str };
+
+  let response = await callAzure(delFavURL, Data);
+  console.log(response);
+  if (response.message == "OK.") {
+    success1(socket, "Token deleted from favourites", false);
+    getFav(socket);
+    return;
+  }
+  error(socket, response.message, false);
+  return;
+}
+
 //Get the favourite tokens of a user
 async function getFav(socket) {
   let userName = socketsToPlayers.get(socket);
-
   let user = users.get(userName);
-
   const Data = { token: user.token };
-  let response = await callAzure(getFavURL, Data);
-  console.log(response.output.username);
 
-  socket.emit('fav', response.output.favouriteCurrencyList);
+  //Get the favourites list of the user
+  let response = await callAzure(getFavURL, Data);
+  let favArr = response.output.favouriteCurrencyList.map(getObj);
+
+  let results = [];
+
+  //Iterating each favourite coin and getting the best price in $
+  for (let i = 0; i < favArr.length; i++) {
+    let obj = favArr[i];
+
+    //Prepare the json for the API (uses the USDT address to find the $ price)
+    let json = { from: obj.address, to: "0x55d398326f99059ff775485246999027b3197955", decimals: obj.decimals };
+    let array = await compare(socket, json, false);
+
+    //Getting the best price
+    var price = array[array.length - 1].price;
+    results.push({ name: obj.symbol, price: price });
+  }
+
+
+
+
+  socket.emit('fav', results);
+
+}
+
+function getObj(symbol) {
+  return currencies.find((x) => {
+    return x.symbol == symbol
+  });
 }
 
 //Requesting the API
@@ -152,19 +194,18 @@ async function handleAuth(json1, socket, url) {
 }
 
 //getting the price  from different exchanges
-async function compare(socket, json) {
+async function compare(socket, json, state = true) {
   console.log("Comparing event");
 
 
   let results = [];
+  //Iterate dexes and find each price
   for (let dex in networks.BSC) {
 
     const Data = { from: json.from, to: json.to, router: networks.BSC[dex], decimal: json.decimals };
-    console.log(Data);
-
     let response = await callAzure(compareURL, Data);
 
-
+    //Check if the exchange is supported by the dex
     if (response.success) {
 
       results.push({ dex: dex, price: response.value });
@@ -178,7 +219,12 @@ async function compare(socket, json) {
     return parseFloat(a.price) - parseFloat(b.price);
   });
 
-  socket.emit('result', results);
+  if (state) {
+    socket.emit('result', results);
+  }
+
+
+  return results;
 }
 
 
@@ -200,7 +246,7 @@ function handleLogout(socket) {
 
 //Sends the token list to the frontend
 function sendTokens(socket) {
-  socket.emit('tokens', paraSwapAssetList);
+  socket.emit('tokens', currencies);
 
 }
 
@@ -213,36 +259,36 @@ io.on('connection', socket => {
   //Handle a login event
   socket.on('login', json => {
     handleAuth(json, socket, loginURL);
-    //updateAll();
   });
 
   //Handle a register event
   socket.on('register', json => {
     handleAuth(json, socket, registerURL);
-    //updateAll();
   });
 
   //Handle a logout eent
   socket.on('logout', () => {
     handleLogout(socket);
-    //updateAll();
   });
 
   //Handle add favourite event
   socket.on('addfav', str => {
     addFav(socket, str);
-    //updateAll();
   });
 
   //Handle get favourite event
   socket.on('getfav', () => {
     getFav(socket);
-    //updateAll();
   });
 
+  //Handle fav delete event
+  socket.on('delfav', str => {
+    getFav(socket);
+  });
+
+  //Handle comparing event
   socket.on('compare', json => {
     compare(socket, json);
-    //updateAll();
   });
 
   //Handle disconnection

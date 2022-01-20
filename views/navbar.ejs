@@ -1,7 +1,15 @@
 <div>
     <button class="nav-button" type="button" @click="pageChange(1)"> <span>Compare</span> </button>
-    <button class="nav-button" type="button" @click="pageChange(4)"> Favourites </button>
-    <button class="nav-button" type="button" @click="pageChange(2)"> Sign Up </button>
-    <button class="nav-button" type="button" @click="pageChange(3)"> Sign In </button>
-    <button class="nav-button" type="button" @click="logout"> Log Out </button>
+    <button v-if="me.state==1" class="nav-button" type="button" @click="getFav"> Favourites </button>
+
+    <button v-if="me.state==0" class="nav-button" type="button" @click="pageChange(2)"> Sign Up </button>
+
+
+    <button v-if="me.state==0" class="nav-button" type="button" @click="pageChange(3)"> Sign In </button>
+
+
+    <button v-if="me.state==1" class="nav-button" type="button" @click="logout"> Log Out </button>
+
+
+
 </div>
