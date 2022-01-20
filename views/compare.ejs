@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="hometitle">
+        <h1>
+            DEXF is the simplest way to find the best prices for maximum profit!
+        </h1>
+    </div>
+
+    <div class="row align-items-center">
+        <div class="col">
+            <h2>Sell:</h2>
+            <select class="form-select" aria-label="Default select example" v-model="sell">
+                <option selected value="WBNB">WBNB</option>
+                <option value="ADA">ADA</option>
+                <option value="BANANA">BANANA</option>
+                <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+                <div v-if="me.state==1">
+                    <label class="btn btn-outline-primary" for="btncheck1" @click="addfav(sell)">Add to
+                        Favourites</label>
+                </div>
+                <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+            </select>
+        </div>
+        <div class="col">
+            <h2>Buy:</h2>
+            <select class="form-select" aria-label="Default select example" v-model="buy">
+                <option selected value="ETH">ETH</option>
+                <option value="ADA">ADA</option>
+                <option value="BANANA">BANANA</option>
+                <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+                <div v-if="me.state==1">
+                    <label class="btn btn-outline-primary" for="btncheck2" @click="addfav(buy)">Add to
+                        Favourites</label>
+                </div>
+                <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+            </select>
+        </div>
+        <div class="col">
+            <h2><br></h2>
+            <button type="button" class="btn btn-primary" @click="compare(true)">
+                Compare
+            </button>
+
+        </div>
+    </div>
+
+
+    <div v-if="comp">
+
+        <div class="tabl">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+
+                        <th scope="col">Dexes</th>
+                        <th scope="col">Price({{sell}} / {{buy}})</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(key,exch) in BSC">
+
+                        <td>{{exch}}</td>
+                        <td>3800</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
