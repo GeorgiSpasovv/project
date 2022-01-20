@@ -1,71 +1,53 @@
 <!doctype html>
 <html lang="en">
-
 <%- include('header'); -%>
 
+<div id="game">
 
+    <div class="nav-container">
+        <%- include('navbar'); -%>
+    </div>
+    
     <main>
-
-
-
-
-        <div id="game">
-            <%- include('navbar'); -%>
-
-
-                <div class="container">
-
-
-                    <div class="row">
-                        <div>
-
-                            <!-- Error Display -->
-                            <div v-if="error" class="alert alert-danger">
-                                <strong>Error: </strong> {{error}}
-                            </div>
-
-                            <div v-if="success" class="alert alert-success">
-                                <strong>Success: </strong> {{success}}
-                            </div>
-
-                            <!-- Waiting for connection -->
-                            <div v-if="page == 1">
-                                <%- include('compare') -%>
-                            </div>
-
-                            <!-- Waiting for player to join -->
-                            <div v-else-if="page==2">
-                                <%- include('register') -%>
-                            </div>
-
-                            <!-- Playing the game -->
-                            <div v-else-if="page==3">
-                                <%- include('login') -%>
-                            </div>
-
-                            <div v-else-if="page==4">
-                                <%- include('favourites') -%>
-                            </div>
-
-
-
-                            <!-- <div class="admin" v-if="me.name == 1">
-                                <p><strong>Debug information:</strong> My state: {{me.state}} | Game state:
-                                    {{state.state}}</p>
-                            </div> -->
-
-                        </div>
-
-                        <!-- <div class="col-md-3">
-                            <input type="text" @keyup.enter="chat()" v-model="chatmessage" class="form-control"
-                                placeholder="Chat" v-if="me.state > 0">
-                            <ul id="messages">
-                            </ul>
-                        </div> -->
-                    </div>
-
+        <div class="container">
+    
+            <div >
+                <!-- Error Display -->
+                <div v-if="error" class="alert alert-danger">
+                    <strong>Error: </strong> {{error}}
                 </div>
+    
+                <div v-if="success" class="alert alert-success">
+                    <strong>Success: </strong> {{success}}
+                </div>
+    
+                <!-- Waiting for connection -->
+                <div v-if="page == 1">
+                    <%- include('compare') -%>
+                </div>
+    
+                <!-- Waiting for player to join -->
+                <div v-else-if="page==2">
+                    <%- include('register') -%>
+                </div>
+    
+                <!-- Playing the game -->
+                <div v-else-if="page==3">
+                    <%- include('login') -%>
+                </div>
+    
+                <div v-else-if="page == 4">
+                    <%- include('favourites') -%>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- <div v-if="comp" class="comp-container"></div> -->
+    
 
-                <%- include('footer'); -%>
+</div>
+
+<%- include('footer'); -%>
 
 </html>

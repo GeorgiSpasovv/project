@@ -25,7 +25,7 @@ module.exports = [
     {
         "name": "BUSD Token",
         "symbol": "BUSD",
-        "address": "0x615446C0Fd5eA8A5FD7fb763f3FC2C58774474F3",
+        "address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
         "chainId": 97,
         "decimals": 18,
         "logoURI": "/images/coins/BTC.png"

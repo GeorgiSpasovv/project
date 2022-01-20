@@ -1,11 +1,12 @@
 'use strict';
 
 const paraSwapAssetList = require('./core-const/token');
+const networks = require('./core-const/ExchangeRouterAddress');
 //Set up express
 const express = require('express');
 const app = express();
 const fetch = require('node-fetch');
-const AppKey = 'SiBwfZ6IYrGp1NgluEbJIMnGH7qKnrPY4OkuTNWatg2JDyO64scddNbd/Q==';
+
 //Setup socket.io
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
@@ -26,17 +27,14 @@ let playersToSockets = new Map();
 //Socket : player number
 let socketsToPlayers = new Map();
 
-
+const AppKey = 'SiBwfZ6IYrGp1NgluEbJIMnGH7qKnrPY4OkuTNWatg2JDyO64scddNbd/Q==';
 let loginURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/login';
 let registerURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/register';
 let favURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/addFavouriteCoin';
+let getFavURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/getUserData';
+let compareURL = 'https://mwj2g19-group-coursework.azurewebsites.net/api/getCurrencyPrice';
 
 
-let nextPlayerNumber = 0;
-let lastPlayer = null;
-let state = 0;
-
-let token
 
 //Start the server
 function startServer() {
@@ -50,12 +48,12 @@ function startServer() {
 function updateAll() {
   //console.log('Updating all players');
   for (let [playerNumber, socket] of playersToSockets) {
-    updatePlayer(socket);
+    updateUser(socket);
   }
 }
 
-//Update one player
-function updatePlayer(socket) {
+//Update a user
+function updateUser(socket) {
   const playerName = socketsToPlayers.get(socket);
   const theUser = users.get(playerName);
   console.log(theUser);
@@ -71,6 +69,7 @@ function error(socket, message, halt) {
   }
 }
 
+//Handle success messages
 function success1(socket, message, halt) {
   console.log('Success: ' + message);
   socket.emit('success', message);
@@ -79,12 +78,12 @@ function success1(socket, message, halt) {
   }
 }
 
+//Adding a token to favourites
 async function addFav(socket, str) {
   console.log("Adding to favourites");
   let userName = socketsToPlayers.get(socket);
 
   let user = users.get(userName);
-  console.log(user);
   const Data = { token: user.token, coin: str };
 
   let response = await callAzure(favURL, Data);
@@ -94,6 +93,20 @@ async function addFav(socket, str) {
     return;
   }
   error(socket, response.message, false);
+  return;
+}
+
+//Get the favourite tokens of a user
+async function getFav(socket) {
+  let userName = socketsToPlayers.get(socket);
+
+  let user = users.get(userName);
+
+  const Data = { token: user.token };
+  let response = await callAzure(getFavURL, Data);
+  console.log(response.output.username);
+
+  socket.emit('fav', response.output.favouriteCurrencyList);
 }
 
 //Requesting the API
@@ -127,16 +140,46 @@ async function handleAuth(json1, socket, url) {
 
     }
 
+    //Add the user
     users.set(json1.username, { name: json1.username, state: 1, favourites: [], page: 1, token: response.token });
     playersToSockets.set(json1.username);
     socketsToPlayers.set(socket, json1.username);
 
-    updatePlayer(socket);
+    updateUser(socket);
     return;
   }
   error(socket, response.message, false);
 }
 
+//getting the price  from different exchanges
+async function compare(socket, json) {
+  console.log("Comparing event");
+
+
+  let results = [];
+  for (let dex in networks.BSC) {
+
+    const Data = { from: json.from, to: json.to, router: networks.BSC[dex], decimal: json.decimals };
+    console.log(Data);
+
+    let response = await callAzure(compareURL, Data);
+
+
+    if (response.success) {
+
+      results.push({ dex: dex, price: response.value });
+    }
+    else {
+
+      results.push({ dex: dex, price: 0 });
+    }
+  }
+  results.sort(function (a, b) {
+    return parseFloat(a.price) - parseFloat(b.price);
+  });
+
+  socket.emit('result', results);
+}
 
 
 //Disconnect
@@ -148,10 +191,16 @@ function handleLogout(socket) {
 
   const player = socketsToPlayers.get(socket);
   users.set(player, { name: '', state: 0, favourites: [], page: 1 });
-  updatePlayer(socket);
+  updateUser(socket);
   users.delete(player);
   socketsToPlayers.delete(socket);
   playersToSockets.delete(player);
+
+}
+
+//Sends the token list to the frontend
+function sendTokens(socket) {
+  socket.emit('tokens', paraSwapAssetList);
 
 }
 
@@ -159,48 +208,40 @@ function handleLogout(socket) {
 //Handle new connection
 io.on('connection', socket => {
   console.log('New connection');
+  sendTokens(socket);
 
-  //Handle on chat message received
-  socket.on('chat', message => {
-    if (!socketsToPlayers.has(socket)) return;
-    handleChat(socketsToPlayers.get(socket), message);
-  });
-
-  socket.on('admin', action => {
-    if (!socketsToPlayers.has(socket)) return;
-    handleAdmin(socketsToPlayers.get(socket), action);
-    updateAll();
-  });
-
-  socket.on('action', action => {
-    if (!socketsToPlayers.has(socket)) return;
-    handleAction(socketsToPlayers.get(socket), action);
-    updateAll()
-  });
-
-  socket.on('join', () => {
-    if (socketsToPlayers.has(socket)) return;
-    handleJoin(socket);
-    updateAll();
-  });
-
+  //Handle a login event
   socket.on('login', json => {
     handleAuth(json, socket, loginURL);
     //updateAll();
   });
 
+  //Handle a register event
   socket.on('register', json => {
     handleAuth(json, socket, registerURL);
     //updateAll();
   });
 
+  //Handle a logout eent
   socket.on('logout', () => {
     handleLogout(socket);
     //updateAll();
   });
 
+  //Handle add favourite event
   socket.on('addfav', str => {
     addFav(socket, str);
+    //updateAll();
+  });
+
+  //Handle get favourite event
+  socket.on('getfav', () => {
+    getFav(socket);
+    //updateAll();
+  });
+
+  socket.on('compare', json => {
+    compare(socket, json);
     //updateAll();
   });
 

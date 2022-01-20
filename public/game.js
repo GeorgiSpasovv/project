@@ -20,11 +20,12 @@ var app = new Vue({
         BSC: {
             PancakeSwap: '0x10ED43C718714eb63d5aA57B78B54704E256024E',
             ApeSwap: '0xcF0feBd3f17CEf5b47b0cD257aCf6025c5BFf3b7',
-            BabySwap: '0x55d398326f99059ff775485246999027b3197955',
             MDEX: '0x7DAe51BD3E3376B8c7c4900E9107f12Be3AF1bA8'
         },
         comp: false,
         success: null,
+        tokens: [],
+        results: [],
     },
     mounted: function () {
         connect();
@@ -61,11 +62,17 @@ var app = new Vue({
         },
 
         compare(boo) {
-            this.comp = boo;
+            //this.comp = boo;
+
+            socket.emit('compare', { from: this.sell.address, to: this.buy.address, decimals: this.buy.decimals });
         },
 
         addfav(token) {
             socket.emit('addfav', token);
+        },
+
+        getFav() {
+            socket.emit('getfav');
         },
 
 
@@ -148,5 +155,19 @@ function connect() {
     socket.on('success', function (data) {
         app.success = data;
         app.fail(null);
+    });
+
+    socket.on('tokens', function (data) {
+        app.tokens = data;
+    });
+
+    socket.on('fav', function (data) {
+        app.me.favourites = data;
+        app.pageChange(4);
+    });
+
+    socket.on('result', function (data) {
+        app.results = data;
+        this.comp = true;
     });
 }

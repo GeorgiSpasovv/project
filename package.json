@@ -1,21 +1,20 @@
 {
-  "name": "ecsexample",
+  "name": "DEXF",
   "version": "1.0.0",
-  "description": "ECS Example Game",
+  "description": "Exchange aggregator",
   "main": "app.js",
   "engines": {
     "node": "16.x"
   },
   "scripts": {
     "start": "node app.js",
-    "gdeploy": "gcloud app deploy --version test",
-    "hdeploy": "git push heroku master"
+    "gdeploy": "gcloud app deploy --version test"
   },
-  "author": "Oli Bills",
+  "author": "Team K",
   "license": "ECS",
   "dependencies": {
     "ejs": "^3.1.6",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "node-fetch": "^2.6.7",
     "socket.io": "^4.3.1",
     "vuex-persistedstate": "^4.1.0"

@@ -1,26 +1,21 @@
-<div class="container">
-    <div class="row">
-        <div class="col"></div>
-        <div class="col">
-            <h1 style="margin-top: 30px">Log in to access all DEXF features</h1>
+<div class="sub-container">
 
-            <div class="login">
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">User Name</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" v-model="username"
-                        aria-describedby="usernameHelp" />
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" v-model="password" />
-                </div>
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
-                <button type="submit" class="btn btn-primary" @click="login()">Submit</button>
-            </div>
-        </div>
-        <div class="col"></div>
+    <h2>Sign In</h2>
+
+    <div class="form-control">
+        <!-- <label for="exampleInputEmail1" class="form-label">Username</label> -->
+        <input type="text" id="exampleInputEmail1" v-model="username" aria-describedby="emailHelp" placeholder="Enter username"/>
     </div>
+
+    <div class="form-control">
+        <!-- <label for="exampleInputPassword1" class="form-label">Password</label> -->
+        <input type="password" v-model="password" id="exampleInputPassword1" placeholder="Enter password"/>
+
+    </div>
+<!-- 
+    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+    <label class="form-check-label" for="exampleCheck1">I accept the Term and Policies</label> -->
+
+    <button type="submit" @click="login()">Submit</button>
+
 </div>
