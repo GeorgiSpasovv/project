@@ -45,13 +45,7 @@ function startServer() {
   });
 }
 
-//Update all players
-function updateAll() {
-  //console.log('Updating all players');
-  for (let [playerNumber, socket] of playersToSockets) {
-    updateUser(socket);
-  }
-}
+
 
 //Update a user
 function updateUser(socket) {
@@ -96,6 +90,7 @@ async function addFav(socket, str) {
   return;
 }
 
+//Delete the favourite token
 async function delFav(socket, str) {
   console.log("Adding to favourites");
   let userName = socketsToPlayers.get(socket);
@@ -121,8 +116,10 @@ async function getFav(socket) {
 
   //Get the favourites list of the user
   let response = await callAzure(getFavURL, Data);
+
   let favArr = response.output.favouriteCurrencyList.map(getObj);
 
+  let symbols = [];
   let results = [];
 
   //Iterating each favourite coin and getting the best price in $
@@ -133,12 +130,24 @@ async function getFav(socket) {
     let json = { from: obj.address, to: "0x55d398326f99059ff775485246999027b3197955", decimals: obj.decimals };
     let array = await compare(socket, json, false);
 
+    symbols.push(obj.symbol);
+    results.push(array);
+
     //Getting the best price
-    var price = array[array.length - 1].price;
-    results.push({ name: obj.symbol, price: price });
+    //var price = array[array.length - 1].price;
+    //results.push({ name: obj.symbol, price: price });
   }
 
+  for (let i = 0; i < results.length; i++) {
+    results[i] = await results[i];
+    let tempArray = results[i];
+    results[i] = tempArray[tempArray.length - 1].price;
 
+    results[i] = {
+      name: symbols[i],
+      price: results[i]
+    };
+  }
 
 
   socket.emit('fav', results);
@@ -186,8 +195,11 @@ async function handleAuth(json1, socket, url) {
     users.set(json1.username, { name: json1.username, state: 1, favourites: [], page: 1, token: response.token });
     playersToSockets.set(json1.username);
     socketsToPlayers.set(socket, json1.username);
-
-    updateUser(socket);
+    if (url == registerURL) {
+      handleAuth(json1, socket, loginURL);
+    } else {
+      updateUser(socket);
+    }
     return;
   }
   error(socket, response.message, false);
@@ -208,7 +220,7 @@ async function compare(socket, json, state = true) {
     //Check if the exchange is supported by the dex
     if (response.success) {
 
-      results.push({ dex: dex, price: response.value });
+      results.push({ dex: dex, price: response.value.toFixed(10) });
     }
     else {
 
@@ -283,7 +295,7 @@ io.on('connection', socket => {
 
   //Handle fav delete event
   socket.on('delfav', str => {
-    getFav(socket);
+    delFav(socket, str);
   });
 
   //Handle comparing event

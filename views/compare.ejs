@@ -3,31 +3,29 @@
     <h2>DEXF</h2>
     <p> The simplest way to find the best prices for maximum profit!</p>
 
-    <select class="form-select" aria-label="Default select example" v-model="sell">
-        <option v-for="token in tokens" :value="token">{{token.name}}</option>
-
-        <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
-    </select>
-    <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-    <div v-if="me.state==1">
-        <label class="btn btn-outline-primary" for="btncheck1" @click="addfav(sell.symbol)">Add to
-            Favourites</label>
+    <div class="form-and-fav">
+        <select class="form-select" aria-label="Default select example" v-model="sell">
+            <option v-for="token in tokens" :value="token">{{token.name}}</option>
+    
+            <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+        </select>
+        <div v-if="me.state==1" class="fav-star">
+            <button class="fav-btn" @click="addfav(sell.symbol)">&#9733;</button>
+        </div>
     </div>
 
-    <select class="form-select" aria-label="Default select example" v-model="buy">
-        <option v-for="token in tokens" :value="token">{{token.name}}</option>
-
-        <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
-    </select>
-    <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-    <div v-if="me.state==1">
-        <label class="btn btn-outline-primary" for="btncheck2" @click="addfav(buy.symbol)">Add to
-            Favourites</label>
+    <div class="form-and-fav">
+        <select class="form-select" aria-label="Default select example" v-model="buy">
+            <option v-for="token in tokens" :value="token">{{token.name}}</option>
+    
+            <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+        </select>
+        <div v-if="me.state==1" class="fav-star">
+            <button class="fav-btn" @click="addfav(buy.symbol)">&#9733;</button>
+        </div>
     </div>
 
-    <h1>1 {{sell.symbol}} = {{buy.symbol}}</h1>
-    <button type="button" @click="compare(true)"> Compare </button>
-
-
+    
+    <button class="submit-button" type="button" @click="compare(true)"> Compare </button>
 
 </div>

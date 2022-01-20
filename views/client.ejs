@@ -28,6 +28,7 @@
 
                     <!-- Waiting for player to join -->
                     <div v-else-if="page==2">
+                    
                         <%- include('register') -%>
                     </div>
 
@@ -44,8 +45,14 @@
         </main>
 
         <div v-if="comp" class="comp-container">
+            <ul class="comp-dex">
+                <li v-for="res in results">{{res.dex}}: </li>
+            </ul>
 
-            <li v-for="res in results">{{res.dex}} - {{res.price}} {{buy.symbol}}</li>
+
+            <ul class="comp-price">
+                <li v-for="res in results">1 {{sell.symbol}} = {{res.price}} {{buy.symbol}}</li>
+            </ul>
         </div>
 
 

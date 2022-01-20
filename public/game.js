@@ -33,14 +33,17 @@ var app = new Vue({
     methods: {
 
         login() {
+            this.comp = false;
             socket.emit('login', { username: this.username, password: this.password });
         },
 
         register() {
+            this.comp = false;
             socket.emit('register', { username: this.username, password: this.password });
         },
 
         logout() {
+            this.comp = false;
             socket.emit('logout');
         },
 
@@ -62,8 +65,6 @@ var app = new Vue({
         },
 
         compare(boo) {
-            //this.comp = boo;
-
             socket.emit('compare', { from: this.sell.address, to: this.buy.address, decimals: this.buy.decimals });
         },
 
@@ -72,6 +73,7 @@ var app = new Vue({
         },
 
         getFav() {
+            this.comp = false;
             socket.emit('getfav');
         },
 
@@ -88,6 +90,7 @@ var app = new Vue({
             return text.charAt(0).toUpperCase() + text.slice(1);
         },
         pageChange(page) {
+            this.comp = false;
             this.page = page;
         }
     }

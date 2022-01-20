@@ -1,0 +1,51 @@
+Date : 2022-01-20 21:36:43
+Directory : c:\Users\gogo7\Desktop\tty\project
+Total : 20 files,  3615 codes, 76 comments, 240 blanks, all 3931 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          2 |      1,650 |          0 |          1 |      1,651 |
+| JavaScript |          5 |      1,593 |         41 |        104 |      1,738 |
+| CSS        |          1 |        213 |          5 |         60 |        278 |
+| HTML       |         11 |        151 |         27 |         71 |        249 |
+| YAML       |          1 |          8 |          3 |          4 |         15 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                   | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                      |         20 |      3,615 |         76 |        240 |      3,931 |
+| core-const                                                             |          2 |        640 |          0 |          1 |        641 |
+| public                                                                 |          3 |        968 |          8 |         91 |      1,067 |
+| views                                                                  |         11 |        151 |         27 |         71 |        249 |
++------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                               | language   | code       | comment    | blank      | total      |
++------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\gogo7\Desktop\tty\project\app.js                              | JavaScript |        198 |         38 |         72 |        308 |
+| c:\Users\gogo7\Desktop\tty\project\app.yaml                            | YAML       |          8 |          3 |          4 |         15 |
+| c:\Users\gogo7\Desktop\tty\project\core-const\ExchangeRouterAddress.js | JavaScript |          7 |          0 |          1 |          8 |
+| c:\Users\gogo7\Desktop\tty\project\core-const\token.js                 | JavaScript |        633 |          0 |          0 |        633 |
+| c:\Users\gogo7\Desktop\tty\project\package-lock.json                   | JSON       |      1,628 |          0 |          1 |      1,629 |
+| c:\Users\gogo7\Desktop\tty\project\package.json                        | JSON       |         22 |          0 |          0 |         22 |
+| c:\Users\gogo7\Desktop\tty\project\public\game.js                      | JavaScript |        122 |          3 |         31 |        156 |
+| c:\Users\gogo7\Desktop\tty\project\public\main.css                     | CSS        |        213 |          5 |         60 |        278 |
+| c:\Users\gogo7\Desktop\tty\project\public\token.js                     | JavaScript |        633 |          0 |          0 |        633 |
+| c:\Users\gogo7\Desktop\tty\project\views\chat.ejs                      | HTML       |          6 |          0 |          1 |          7 |
+| c:\Users\gogo7\Desktop\tty\project\views\client.ejs                    | HTML       |         37 |          4 |         15 |         56 |
+| c:\Users\gogo7\Desktop\tty\project\views\compare.ejs                   | HTML       |         22 |          2 |          9 |         33 |
+| c:\Users\gogo7\Desktop\tty\project\views\favourites.ejs                | HTML       |          5 |          0 |          0 |          5 |
+| c:\Users\gogo7\Desktop\tty\project\views\footer.ejs                    | HTML       |          5 |          4 |          6 |         15 |
+| c:\Users\gogo7\Desktop\tty\project\views\header.ejs                    | HTML       |         13 |          3 |          9 |         25 |
+| c:\Users\gogo7\Desktop\tty\project\views\loading.ejs                   | HTML       |          1 |          0 |          1 |          2 |
+| c:\Users\gogo7\Desktop\tty\project\views\login.ejs                     | HTML       |         10 |          5 |          6 |         21 |
+| c:\Users\gogo7\Desktop\tty\project\views\navbar.ejs                    | HTML       |          7 |          0 |          8 |         15 |
+| c:\Users\gogo7\Desktop\tty\project\views\play.ejs                      | HTML       |         32 |          0 |          9 |         41 |
+| c:\Users\gogo7\Desktop\tty\project\views\register.ejs                  | HTML       |         13 |          9 |          7 |         29 |
+| Total                                                                  |            |      3,615 |         76 |        240 |      3,931 |
++------------------------------------------------------------------------+------------+------------+------------+------------+------------+

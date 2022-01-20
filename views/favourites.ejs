@@ -1,5 +1,16 @@
 <div class="sub-container">
-    <h1>Your Favourite Tokens can be found here.</h1>
-    <p>Token - $</p>
-    <li v-for="fav in me.favourites">{{fav.name}} - ${{fav.price}}</li>
+    <h2>Your Favourite Tokens</h2>
+    <!-- <li v-for="fav in me.favourites">{{fav.name}} - ${{fav.price}}</li> -->
+
+    <div class="fav-container">
+        <ul class="fav-coin">
+            <li v-for="fav in me.favourites"><button class="fav-delete"
+                    @click="delFav(fav.name)">x</button>{{fav.name}}:</li>
+        </ul>
+
+        <ul class="fav-price">
+            <li v-for="fav in me.favourites">${{fav.price}}</li>
+        </ul>
+    </div>
+
 </div>
